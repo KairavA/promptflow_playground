@@ -1,0 +1,82 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+environment:
+  python_requirements_txt: requirements.txt
+inputs:
+  file_path:
+    type: string
+outputs:
+  response:
+    type: string
+    reference: ${generate_response.output}
+nodes:
+- name: document_class_check
+  type: python
+  source:
+    type: code
+    path: document_class_check.py
+  inputs:
+    file_path: ${inputs.file_path}
+- name: system_prompt
+  type: prompt
+  source:
+    type: code
+    path: system_prompt.jinja2
+  inputs: {}
+- name: pdf_reader
+  type: python
+  source:
+    type: code
+    path: pdf_reader.py
+  inputs:
+    pdf_path: ${inputs.file_path}
+  activate:
+    when: ${document_class_check.output}
+    is: pdf
+- name: docx_reader
+  type: python
+  source:
+    type: code
+    path: docx_reader.py
+  inputs:
+    docx_path: ${inputs.file_path}
+  activate:
+    when: ${document_class_check.output}
+    is: docx
+- name: generate_document_content
+  type: python
+  source:
+    type: code
+    path: generate_document_content.py
+  inputs:
+    pdf_content: ${pdf_reader.output}
+    docx_content: ${docx_reader.output}
+- name: summary_prompt
+  type: prompt
+  source:
+    type: code
+    path: summary_prompt.jinja2
+  inputs:
+    text: ${generate_document_content.output}
+- name: echo_my_prompt
+  type: python
+  source:
+    type: code
+    path: hello.py
+  inputs:
+    input1: ${summary_prompt.output}
+- name: summarize_document
+  type: python
+  source:
+    type: code
+    path: summarize_document.py
+  inputs:
+    system_prompt: ${system_prompt.output}
+    summary_prompt: ${summary_prompt.output}
+    document_class: ${document_class_check.output}
+- name: generate_response
+  type: python
+  source:
+    type: code
+    path: generate_response.py
+  inputs:
+    llm_output: ${summarize_document.output}
