@@ -1,0 +1,7 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/OpenAIConnection.schema.json
+name: radai_api_connection # Your connection name
+type: open_ai
+api_key: "<user_input>"
+base_url: "<user_input>"
+# api_type: open_ai #or azure
+# api_version: "2023-05-15" #or relevant version.

@@ -1,0 +1,19 @@
+[project]
+name = "promptflow-playground"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dbus-python>=1.4.0",
+    "dotenv>=0.9.9",
+    "fitz>=0.0.1.dev2",
+    "keyrings-alt>=5.0.2",
+    "openai>=1.67.0",
+    "promptflow>=1.17.2",
+    "promptflow-devkit>=1.17.2",
+    "promptflow-tools>=1.6.0",
+    "promptflow-tracing>=1.17.2",
+    "pymupdf>=1.25.4",
+    "python-docx>=1.1.2",
+]

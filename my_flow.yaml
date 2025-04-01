@@ -1,0 +1,24 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+type: flow
+inputs:
+  user_input:
+    type: string
+    default: "Tell me a joke."
+outputs:
+  response:
+    type: string
+nodes:
+  - name: generate_response
+    type: llm
+    source:
+      connection: radai_ai_connection # VERY IMPORTANT: Double-check this name!
+      deployment_name: gpt-4o # VERY IMPORTANT: Double-check this name!
+      prompt: |
+        You are a helpful assistant who is obsessed with knowing the person you are chating with and divert the conversation to a friedly chat. User says: {{inputs.user_input}}
+        temperature: 0.7
+    output:
+      type: python
+      source: |
+        return {'response': generate_response.output.completion} #added .completion, if needed
+      inputs:
+      generate_response: ${generate_response}

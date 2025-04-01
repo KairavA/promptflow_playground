@@ -1,0 +1,21 @@
+nodes:
+- name: get_connection
+  type: python
+  source:
+    type: code
+    path: get_connection.py
+- name: call_openai_api
+  type: python
+  source:
+    type: code
+    path: radai_api_call.py
+  inputs:
+    connection: "${get_connection.output}"
+    prompt: "${inputs.user_prompt}"
+inputs:
+  user_prompt:
+    type: string
+outputs:
+  response:
+    type: string
+    reference: "${call_openai_api.output}" # Corrected line
